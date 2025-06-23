@@ -1,8 +1,18 @@
-import { cartCrud, appointmentCrud, categoryCrud, expenseCrud, invoiceCrud, orderCrud, productCrud, quoteCrud, userCrud} from '@/lib/prisma';
-
+import Link from 'next/link';
+import {
+  cartCrud,
+  appointmentCrud,
+  categoryCrud,
+  expenseCrud,
+  invoiceCrud,
+  orderCrud,
+  productCrud,
+  quoteCrud,
+  userCrud,
+} from '@/lib/prisma';
 
 export default async function Home() {
-  // Fetch all data using CRUD functions
+  // Todo crud, no api
   const users = await userCrud.getAll();
   const products = await productCrud.getAll();
   const orders = await orderCrud.getAll();
@@ -10,8 +20,8 @@ export default async function Home() {
   const quotes = await quoteCrud.getAll();
   const invoices = await invoiceCrud.getAll();
   const categories = await categoryCrud.getAll();
-  const expenses= await expenseCrud.getAll();
-  // const carts = await cartCrud.getByUserId(1);
+  const expenses = await expenseCrud.getAll();
+  const carts = await cartCrud.getByUserId(1);
 
   const expensesByCategory = await expenseCrud.getTotalByCategory();
   const monthlyExpenses = await expenseCrud.getMonthlyTotals();
@@ -19,8 +29,10 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-gray-900">Business Dashboard</h1>
-        
+        <h1 className="text-4xl font-bold mb-8 text-gray-900">
+          Business Dashboard
+        </h1>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow-sm border">
@@ -28,15 +40,23 @@ export default async function Home() {
             <p className="text-3xl font-bold text-blue-600">{users.length}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Total Products</h3>
-            <p className="text-3xl font-bold text-green-600">{products.length}</p>
+            <h3 className="text-sm font-medium text-gray-500">
+              Total Products
+            </h3>
+            <p className="text-3xl font-bold text-green-600">
+              {products.length}
+            </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border">
             <h3 className="text-sm font-medium text-gray-500">Total Orders</h3>
-            <p className="text-3xl font-bold text-purple-600">{orders.length}</p>
+            <p className="text-3xl font-bold text-purple-600">
+              {orders.length}
+            </p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-500">Pending Appointments</h3>
+            <h3 className="text-sm font-medium text-gray-500">
+              Pending Appointments
+            </h3>
             <p className="text-3xl font-bold text-orange-600">
               {appointments.filter(a => a.status === 'SCHEDULED').length}
             </p>
@@ -47,8 +67,11 @@ export default async function Home() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 text-gray-900">Users</h2>
           <div className="grid gap-4">
-            {users.slice(0, 5).map((user) => (
-              <div key={user.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {users.slice(0, 5).map(user => (
+              <div
+                key={user.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-semibold text-lg">{user.name}</h3>
@@ -57,11 +80,15 @@ export default async function Home() {
                     <p className="text-sm text-gray-500">{user.address}</p>
                   </div>
                   <div className="text-right">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      user.role === 'ADMIN' ? 'bg-red-100 text-red-800' :
-                      user.role === 'EMPLOYEE' ? 'bg-blue-100 text-blue-800' :
-                      'bg-green-100 text-green-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        user.role === 'ADMIN'
+                          ? 'bg-red-100 text-red-800'
+                          : user.role === 'EMPLOYEE'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}
+                    >
                       {user.role}
                     </span>
                     <p className="text-xs text-gray-500 mt-1">
@@ -79,10 +106,19 @@ export default async function Home() {
 
         {/* Products Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Products</h2>
+          <div>
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">Products</h2>
+            <button style={{ padding: '10px 20px', fontSize: '16px' }}>
+              <Link href="/products">Go to Products</Link>
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.slice(0, 6).map((product) => (
-              <div key={product.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {products.slice(0, 6).map(product => (
+              <div
+                key={product.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-lg">{product.name}</h3>
                   {product.featured && (
@@ -91,24 +127,35 @@ export default async function Home() {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+                <p className="text-gray-600 text-sm mb-2">
+                  {product.description}
+                </p>
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-lg font-bold text-green-600">
-                      ${typeof product.price?.toNumber === 'function' 
-                        ? product.price.toNumber().toFixed(2) 
+                      $
+                      {typeof product.price?.toNumber() === 'function'
+                        ? product.price.toNumber().toFixed(2)
                         : product.price}
                     </p>
-                    <p className="text-sm text-gray-500">Stock: {product.stock}</p>
+                    <p className="text-sm text-gray-500">
+                      Stock: {product.stock}
+                    </p>
                   </div>
                   <div className="text-right">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        product.isActive
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}
+                    >
                       {product.isActive ? 'Active' : 'Inactive'}
                     </span>
                     {product.category && (
-                      <p className="text-xs text-gray-500 mt-1">{product.category.name}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {product.category.name}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -119,44 +166,66 @@ export default async function Home() {
 
         {/* Orders Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Recent Orders</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Recent Orders
+          </h2>
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Order ID
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Customer
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Total
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Date
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {orders.slice(0, 5).map((order) => (
+                  {orders.slice(0, 5).map(order => (
                     <tr key={order.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         #{order.id}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{order.user?.name}</p>
-                          <p className="text-sm text-gray-500">{order.user?.email}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {order.user?.name}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {order.user?.email}
+                          </p>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                          order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                          order.status === 'SHIPPED' ? 'bg-blue-100 text-blue-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            order.status === 'COMPLETED'
+                              ? 'bg-green-100 text-green-800'
+                              : order.status === 'PENDING'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : order.status === 'SHIPPED'
+                              ? 'bg-blue-100 text-blue-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
                           {order.status}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${typeof order.total?.toNumber === 'function' 
-                          ? order.total.toNumber().toFixed(2) 
+                        $
+                        {typeof order.total?.toNumber === 'function'
+                          ? order.total.toNumber().toFixed(2)
                           : order.total}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -172,36 +241,55 @@ export default async function Home() {
 
         {/* Appointments Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Upcoming Appointments</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Upcoming Appointments
+          </h2>
           <div className="grid gap-4">
-            {appointments.slice(0, 5).map((appointment) => (
-              <div key={appointment.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {appointments.slice(0, 5).map(appointment => (
+              <div
+                key={appointment.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold text-lg">{appointment.title}</h3>
+                    <h3 className="font-semibold text-lg">
+                      {appointment.title}
+                    </h3>
                     <p className="text-gray-600">{appointment.description}</p>
                     <p className="text-sm text-gray-500">
-                      {new Date(appointment.scheduledDate).toLocaleDateString()} 
-                      {appointment.scheduledTime && ` at ${appointment.scheduledTime}`}
+                      {new Date(appointment.scheduledDate).toLocaleDateString()}
+                      {appointment.scheduledTime &&
+                        ` at ${appointment.scheduledTime}`}
                     </p>
                     {appointment.user && (
-                      <p className="text-sm text-gray-500">Client: {appointment.user.name}</p>
+                      <p className="text-sm text-gray-500">
+                        Client: {appointment.user.name}
+                      </p>
                     )}
                   </div>
                   <div className="text-right">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      appointment.status === 'SCHEDULED' ? 'bg-blue-100 text-blue-800' :
-                      appointment.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                      appointment.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        appointment.status === 'SCHEDULED'
+                          ? 'bg-blue-100 text-blue-800'
+                          : appointment.status === 'COMPLETED'
+                          ? 'bg-green-100 text-green-800'
+                          : appointment.status === 'CANCELLED'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
                       {appointment.status}
                     </span>
                     {appointment.appointmentType && (
-                      <p className="text-xs text-gray-500 mt-1">{appointment.appointmentType}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {appointment.appointmentType}
+                      </p>
                     )}
                     {appointment.assignedUser && (
-                      <p className="text-xs text-gray-500">Assigned: {appointment.assignedUser.name}</p>
+                      <p className="text-xs text-gray-500">
+                        Assigned: {appointment.assignedUser.name}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -212,31 +300,46 @@ export default async function Home() {
 
         {/* Quotes Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Recent Quotes</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Recent Quotes
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {quotes.slice(0, 4).map((quote) => (
-              <div key={quote.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {quotes.slice(0, 4).map(quote => (
+              <div
+                key={quote.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-lg">{quote.title}</h3>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    quote.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-                    quote.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                    quote.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      quote.status === 'APPROVED'
+                        ? 'bg-green-100 text-green-800'
+                        : quote.status === 'PENDING'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : quote.status === 'REJECTED'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`}
+                  >
                     {quote.status}
                   </span>
                 </div>
-                <p className="text-gray-600 text-sm mb-2">{quote.description}</p>
+                <p className="text-gray-600 text-sm mb-2">
+                  {quote.description}
+                </p>
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-lg font-bold text-green-600">
-                      ${typeof quote.amount?.toNumber === 'function' 
-                        ? quote.amount.toNumber().toFixed(2) 
+                      $
+                      {typeof quote.amount?.toNumber === 'function'
+                        ? quote.amount.toNumber().toFixed(2)
                         : quote.amount}
                     </p>
                     {quote.user && (
-                      <p className="text-sm text-gray-500">Client: {quote.user.name}</p>
+                      <p className="text-sm text-gray-500">
+                        Client: {quote.user.name}
+                      </p>
                     )}
                   </div>
                   <div className="text-right">
@@ -245,11 +348,14 @@ export default async function Home() {
                     </p>
                     {quote.validUntil && (
                       <p className="text-xs text-gray-500">
-                        Valid until: {new Date(quote.validUntil).toLocaleDateString()}
+                        Valid until:{' '}
+                        {new Date(quote.validUntil).toLocaleDateString()}
                       </p>
                     )}
                     {quote.creator && (
-                      <p className="text-xs text-gray-500">By: {quote.creator.name}</p>
+                      <p className="text-xs text-gray-500">
+                        By: {quote.creator.name}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -260,21 +366,33 @@ export default async function Home() {
 
         {/* Invoices Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Recent Invoices</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Recent Invoices
+          </h2>
           <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice #</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Invoice #
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Customer
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Amount
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Due Date
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {invoices.slice(0, 5).map((invoice) => (
+                  {invoices.slice(0, 5).map(invoice => (
                     <tr key={invoice.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {invoice.invoiceNumber}
@@ -283,19 +401,26 @@ export default async function Home() {
                         {invoice.order?.user?.name || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${typeof invoice.amount?.toNumber === 'function' 
-                          ? invoice.amount.toNumber().toFixed(2) 
+                        $
+                        {typeof invoice.amount?.toNumber === 'function'
+                          ? invoice.amount.toNumber().toFixed(2)
                           : invoice.amount}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          invoice.paidAt ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            invoice.paidAt
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
                           {invoice.paidAt ? 'Paid' : 'Unpaid'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : 'N/A'}
+                        {invoice.dueDate
+                          ? new Date(invoice.dueDate).toLocaleDateString()
+                          : 'N/A'}
                       </td>
                     </tr>
                   ))}
@@ -309,17 +434,28 @@ export default async function Home() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-6 text-gray-900">Categories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <div key={category.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {categories.map(category => (
+              <div
+                key={category.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-semibold text-lg">{category.name}</h3>
-                    <p className="text-gray-600 text-sm">{category.description}</p>
-                    <p className="text-xs text-gray-500 mt-1">Slug: {category.slug}</p>
+                    <p className="text-gray-600 text-sm">
+                      {category.description}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Slug: {category.slug}
+                    </p>
                   </div>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    category.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded text-xs font-medium ${
+                      category.isActive
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
                     {category.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </div>
@@ -330,22 +466,32 @@ export default async function Home() {
 
         {/* Expenses Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Recent Expenses</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Recent Expenses
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {expenses.slice(0, 6).map((expense) => (
-              <div key={expense.id} className="bg-white p-4 rounded-lg shadow-sm border">
+            {expenses.slice(0, 6).map(expense => (
+              <div
+                key={expense.id}
+                className="bg-white p-4 rounded-lg shadow-sm border"
+              >
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold text-lg">{expense.description}</h3>
-                    <p className="text-sm text-gray-500">Category: {expense.category}</p>
+                    <h3 className="font-semibold text-lg">
+                      {expense.description}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Category: {expense.category}
+                    </p>
                     <p className="text-xs text-gray-500">
                       Date: {new Date(expense.date).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-lg font-bold text-red-600">
-                      ${typeof expense.amount?.toNumber === 'function' 
-                        ? expense.amount.toNumber().toFixed(2) 
+                      $
+                      {typeof expense.amount?.toNumber === 'function'
+                        ? expense.amount.toNumber().toFixed(2)
                         : expense.amount}
                     </p>
                   </div>
@@ -357,34 +503,52 @@ export default async function Home() {
 
         {/* Expense Analytics */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">Expense Analytics</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">
+            Expense Analytics
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border">
-              <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Expenses by Category
+              </h3>
               <div className="space-y-2">
                 {expensesByCategory.map((item, index: number) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">{item.category}</span>
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
+                    <span className="text-sm text-gray-600">
+                      {item.category}
+                    </span>
                     <div className="text-right">
                       <span className="font-medium">
                         ${item._sum.amount?.toNumber?.() || item._sum.amount}
                       </span>
-                      <span className="text-xs text-gray-500 ml-2">({item._count} items)</span>
+                      <span className="text-xs text-gray-500 ml-2">
+                        ({item._count} items)
+                      </span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <h3 className="text-lg font-semibold mb-4">Monthly Expenses</h3>
               <div className="space-y-2">
-                {Object.entries(monthlyExpenses).slice(0, 6).map(([month, amount]) => (
-                  <div key={month} className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">{month}</span>
-                    <span className="font-medium">${(amount as number).toFixed(2)}</span>
-                  </div>
-                ))}
+                {Object.entries(monthlyExpenses)
+                  .slice(0, 6)
+                  .map(([month, amount]) => (
+                    <div
+                      key={month}
+                      className="flex justify-between items-center"
+                    >
+                      <span className="text-sm text-gray-600">{month}</span>
+                      <span className="font-medium">
+                        ${(amount as number).toFixed(2)}
+                      </span>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
